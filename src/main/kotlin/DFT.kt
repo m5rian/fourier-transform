@@ -20,9 +20,7 @@ class DFT : FourierTransform() {
 
         for (freqX in 0 until spatialData.width) {
             for (freqY in 0 until spatialData.height) {
-                //println("f($freqX, $freqY)")
                 val complex = f(freqX, freqY, spatialData) // Complex number result
-
                 // Shift the frequency to the center of the image (better for visualization)
                 val shiftedX = (freqX + spatialData.width / 2) % spatialData.width
                 val shiftedY = (freqY + spatialData.height / 2) % spatialData.height
@@ -42,12 +40,12 @@ class DFT : FourierTransform() {
 
         for (spaceX in 0 until spatialData.width) {
             for (spaceY in 0 until spatialData.height) {
-                val pixelValue = spatialData[spaceY][spaceX].toDouble()
+                val pixelValue = spatialData[spaceY][spaceX]
 
                 val normalizedX = freqX * spaceX / spatialData.width.toDouble()
                 val normalizedY = freqY * spaceY / spatialData.height.toDouble()
 
-                val angle = 2 * PI * (normalizedX + normalizedY)
+                val angle = 2.0 * PI * (normalizedX + normalizedY)
                 val exponential = exp(I * -angle)
 
                 sum += pixelValue * exponential

@@ -44,6 +44,13 @@ val Array<IntArray>.width: Int
 val Array<IntArray>.height: Int
     get() = this.size
 
+val Array<DoubleArray>.width: Int
+    get() = this.first().size
+
+val Array<DoubleArray>.height: Int
+    get() = this.size
+
+
 fun bufferedImageFromGrayscale2DArray(width: Int, height: Int, pixels: Array<IntArray>): BufferedImage {
     val image = BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY)
     val raster = image.raster

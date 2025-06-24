@@ -1,10 +1,9 @@
 import extensionUtilities.height
 import extensionUtilities.width
 import kotlin.math.log10
-import kotlin.math.round
 import kotlin.math.roundToInt
 
-fun Array<IntArray>.normalizeLinear(limit: Int): Array<IntArray> {
+fun Array<DoubleArray>.normalizeLinear(limit: Int): Array<IntArray> {
     val maxValue = this.maxOf { row -> row.max() }
 
     val scale = if (maxValue > 0) limit.toDouble() / maxValue else 1.0
@@ -20,12 +19,12 @@ fun Array<IntArray>.normalizeLinear(limit: Int): Array<IntArray> {
     return normalized
 }
 
-fun Array<IntArray>.transformLogarithmic(): Array<IntArray> {
-    val logarithmic = Array(height) { IntArray(width) { 0 } }
+fun Array<DoubleArray>.transformLogarithmic(): Array<DoubleArray> {
+    val logarithmic = Array(height) { DoubleArray(width) { 0.0 } }
 
     for (y in indices) {
         for (x in this[y].indices) {
-            logarithmic[y][x] = round(log10(1 + this[y][x].toDouble())).toInt()
+            logarithmic[y][x] = log10(1 + this[y][x])
         }
     }
 

@@ -2,7 +2,6 @@ import extensionUtilities.bufferedImageFromGrayscale2DArray
 import extensionUtilities.toGrayscale2DArray
 import java.io.File
 import javax.imageio.ImageIO
-import kotlin.math.roundToInt
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -17,8 +16,8 @@ fun main() {
 
     val dft = DFT()
     val frequencyData = dft.toFrequencyDomain(spatialDataOriginal)
-        // Convert FrequencyDomain to amplitude for visualization
-        .map { row -> row.map { it.amplitude.roundToInt() }.toIntArray() }.toTypedArray()
+        // Use amplitude for visualization
+        .map { row -> row.map { it.amplitude }.toDoubleArray() }.toTypedArray()
         .transformLogarithmic()
         .normalizeLinear(UByte.MAX_VALUE.toInt())
     //val spatialData = dft.toSpatialDomain(frequencyData)
