@@ -1,6 +1,8 @@
 package extensionUtilities
 
 import java.awt.image.BufferedImage
+import kotlin.math.PI
+import kotlin.math.sin
 
 fun BufferedImage.toGrayscale2DArray(): Array<IntArray> {
     val width = this.width
@@ -10,15 +12,22 @@ fun BufferedImage.toGrayscale2DArray(): Array<IntArray> {
     for (y in 0 until height) {
         for (x in 0 until width) {
             val rgb = this.getRGB(x, y)
-            val r = (rgb shr 16) and 0xFF
-            val g = (rgb shr 8) and 0xFF
-            val b = rgb and 0xFF
-            val gray = (r + g + b) / 3
-            grayPixels[y][x] = (gray shl 16) or (gray shl 8) or gray // RGB format
+            val grayscale = rgbToGrayscale(rgb)
+            grayPixels[y][x] = grayscale
         }
     }
 
     return grayPixels
+}
+
+fun rgbToGrayscale(rgb: Int): Int {
+    val r = (rgb shr 16) and 0xFF
+    val g = (rgb shr 8) and 0xFF
+    val b = rgb and 0xFF
+
+    // Calculate the luminance (grayscale) using standard NTSC conversion formula
+    val gray = (0.299 * r + 0.587 * g + 0.114 * b).toInt()
+    return gray
 }
 
 fun Array<IntArray>.forEachPixel(transform: (x: Int, y: Int, rgb: Int) -> Unit) {
@@ -35,42 +44,36 @@ val Array<IntArray>.width: Int
 val Array<IntArray>.height: Int
     get() = this.size
 
-fun BufferedImage.mapPixels(transform: (Int, Int) -> Int): BufferedImage {
-    val width = this.width
-    val height = this.height
-    val newImage = BufferedImage(width, height, this.type)
-
-    for (y in 0 until height) {
-        for (x in 0 until width) {
-            newImage.setRGB(x, y, transform(x, y))
-        }
-    }
-
-    return newImage
-}
-
-fun BufferedImage.getGrey(x: Int, y: Int): Int {
-    val rgb = this.getRGB(x, y)
-    val r = (rgb shr 16) and 0xFF
-    val g = (rgb shr 8) and 0xFF
-    val b = rgb and 0xFF
-    return (r + g + b) / 3 // Return the average as the gray value
-}
-
-fun BufferedImagefromArrayGray(width: Int, height: Int, pixels: IntArray): BufferedImage {
+fun bufferedImageFromGrayscale2DArray(width: Int, height: Int, pixels: Array<IntArray>): BufferedImage {
     val image = BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY)
-
     val raster = image.raster
+
     for (y in 0 until height) {
         for (x in 0 until width) {
-            val gray = pixels[y * width + x].coerceIn(0, 255)
+            val gray = pixels[y][x].coerceIn(0, 255)
             raster.setSample(x, y, 0, gray) // Channel 0 for grayscale
         }
     }
     return image
 }
 
-fun Int.toGrayscale(): Int {
-    val gray = this and 0xFF
-    return (gray shl 16) or (gray shl 8) or gray // Convert gray to RGB format
+fun generateSinusoidalGratingImage(
+    width: Int,
+    height: Int,
+    frequency: Double, // number of cycles across the image width
+    phase: Double = 0.0 // in radians
+): BufferedImage {
+    val image = BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY)
+
+    for (y in 0 until height) {
+        for (x in 0 until width) {
+            // Compute normalized value of sine wave: from 0 to 255
+            val radians = 2 * PI * frequency * x / width + phase
+            val intensity = ((sin(radians) + 1) * 127.5).toInt().coerceIn(0, 255)
+            val rgb = (intensity shl 16) or (intensity shl 8) or intensity
+            image.setRGB(x, y, rgb)
+        }
+    }
+
+    return image
 }
