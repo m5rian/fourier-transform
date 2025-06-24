@@ -7,7 +7,7 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 fun main() {
-    val file = File("/Users/marian/Documents/Code/fourier-transform/img.png")
+    val file = File("/Users/marian/Documents/Code/fourier-transform/images/input_125.jpg")
     require(file.exists()) { "File does not exist!" }
 
     val image = ImageIO.read(file)
@@ -27,8 +27,8 @@ fun main() {
     val originalImage = bufferedImageFromGrayscale2DArray(image.width, image.height, spatialDataOriginal)
     val frequencyImage = bufferedImageFromGrayscale2DArray(image.width, image.height, frequencyData)
     //val spatialImage = bufferedImageFromGrayscale2DArray(image.width, image.height, spatialData)
-    ImageIO.write(originalImage, "png", File("./output-${timestamp}_original.png"))
-    ImageIO.write(frequencyImage, "png", File("./output-${timestamp}_frequency.png"))
+    ImageIO.write(originalImage, "png", File("./images/output-${timestamp}_original.png"))
+    ImageIO.write(frequencyImage, "png", File("./images/output-${timestamp}_frequency.png"))
     //ImageIO.write(spatialImage, "png", File("./output-${timestamp}_spatial.png"))
     println("Wrote images to disk with timestamp: $timestamp")
 }
