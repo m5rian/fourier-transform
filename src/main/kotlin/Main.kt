@@ -1,22 +1,24 @@
 import extensionUtilities.bufferedImageFromGrayscale2DArray
-import extensionUtilities.generateSinusoidalGratingImage
 import extensionUtilities.toGrayscale2DArray
 import java.io.File
 import javax.imageio.ImageIO
+import kotlin.math.roundToInt
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 fun main() {
-    val file = File("/Users/marian/Documents/Code/fourier-transform/input_125.jpg")
+    val file = File("/Users/marian/Documents/Code/fourier-transform/img.png")
     require(file.exists()) { "File does not exist!" }
 
-    //val image = ImageIO.read(file)
-    val image = generateSinusoidalGratingImage(128, 128, 7.0)
+    val image = ImageIO.read(file)
+    //val image = generateSinusoidalGratingImage(128, 128, 7.0)
     val spatialDataOriginal = image.toGrayscale2DArray()
 
     val dft = DFT()
     val frequencyData = dft.toFrequencyDomain(spatialDataOriginal)
+        // Convert FrequencyDomain to amplitude for visualization
+        .map { row -> row.map { it.amplitude.roundToInt() }.toIntArray() }.toTypedArray()
         .transformLogarithmic()
         .normalizeLinear(UByte.MAX_VALUE.toInt())
     //val spatialData = dft.toSpatialDomain(frequencyData)

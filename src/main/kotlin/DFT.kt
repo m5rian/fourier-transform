@@ -6,24 +6,31 @@ import org.kotlinmath.I
 import org.kotlinmath.exp
 import org.kotlinmath.times
 import kotlin.math.PI
+import kotlin.math.atan
 import kotlin.math.roundToInt
 
 class DFT : FourierTransform() {
 
-    override fun toFrequencyDomain(spatialData: Array<IntArray>): Array<IntArray> {
-        val frequencyData = Array(spatialData.height) { IntArray(spatialData.width) { 0 } }
+    override fun toFrequencyDomain(spatialData: Array<IntArray>): Array<Array<FrequencyDomain>> {
+        val frequencyData = Array(spatialData.height) {
+            Array(spatialData.width) {
+                FrequencyDomain(0.0, 0.0)
+            }
+        }
 
         for (freqX in 0 until spatialData.width) {
             for (freqY in 0 until spatialData.height) {
                 //println("f($freqX, $freqY)")
-                val frequency = f(freqX, freqY, spatialData)
-                val amplitude = frequency.abs().toInt()
+                val complex = f(freqX, freqY, spatialData) // Complex number result
 
                 // Shift the frequency to the center of the image (better for visualization)
                 val shiftedX = (freqX + spatialData.width / 2) % spatialData.width
                 val shiftedY = (freqY + spatialData.height / 2) % spatialData.height
 
-                frequencyData[shiftedY][shiftedX] = amplitude
+                frequencyData[shiftedY][shiftedX] = FrequencyDomain(
+                    amplitude = complex.abs(),
+                    phase = atan(complex.im / complex.re)
+                )
             }
         }
 
