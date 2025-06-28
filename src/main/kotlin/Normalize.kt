@@ -2,6 +2,7 @@ import extensionUtilities.height
 import extensionUtilities.width
 import kotlin.math.log10
 import kotlin.math.roundToInt
+import kotlin.math.sqrt
 
 fun Array<DoubleArray>.normalizeLinear(limit: Int): Array<IntArray> {
     val maxValue = this.maxOf { row -> row.max() }
@@ -25,6 +26,18 @@ fun Array<DoubleArray>.transformLogarithmic(): Array<DoubleArray> {
     for (y in indices) {
         for (x in this[y].indices) {
             logarithmic[y][x] = log10(1 + this[y][x])
+        }
+    }
+
+    return logarithmic
+}
+
+fun Array<DoubleArray>.transformSquareRoot(): Array<DoubleArray> {
+    val logarithmic = Array(height) { DoubleArray(width) { 0.0 } }
+
+    for (y in indices) {
+        for (x in this[y].indices) {
+            logarithmic[y][x] = sqrt(this[y][x])
         }
     }
 

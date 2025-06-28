@@ -38,19 +38,6 @@ fun Array<IntArray>.forEachPixel(transform: (x: Int, y: Int, rgb: Int) -> Unit) 
     }
 }
 
-val Array<IntArray>.width: Int
-    get() = this.first().size
-
-val Array<IntArray>.height: Int
-    get() = this.size
-
-val Array<DoubleArray>.width: Int
-    get() = this.first().size
-
-val Array<DoubleArray>.height: Int
-    get() = this.size
-
-
 fun bufferedImageFromGrayscale2DArray(width: Int, height: Int, pixels: Array<IntArray>): BufferedImage {
     val image = BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY)
     val raster = image.raster
