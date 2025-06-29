@@ -3,6 +3,7 @@ import extensionUtilities.generateSinusoidalGratingImage
 import extensionUtilities.toGrayscale2DArray
 import java.io.File
 import javax.imageio.ImageIO
+import kotlin.math.PI
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -12,7 +13,7 @@ fun main() {
     //require(file.exists()) { "File does not exist!" }
 
     //val image = ImageIO.read(file)
-    val image = generateSinusoidalGratingImage(1024, 1024, 7.0)
+    val image = generateSinusoidalGratingImage(1024, 1024, 14.0, PI/2)
     val spatialDataOriginal = image.toGrayscale2DArray()
 
     val dft = FFTCooleyTukey()

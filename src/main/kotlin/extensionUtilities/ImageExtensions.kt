@@ -2,6 +2,7 @@ package extensionUtilities
 
 import java.awt.image.BufferedImage
 import kotlin.math.PI
+import kotlin.math.cos
 import kotlin.math.sin
 
 fun BufferedImage.toGrayscale2DArray(): Array<IntArray> {
@@ -54,15 +55,20 @@ fun bufferedImageFromGrayscale2DArray(width: Int, height: Int, pixels: Array<Int
 fun generateSinusoidalGratingImage(
     width: Int,
     height: Int,
-    frequency: Double, // number of cycles across the image width
-    phase: Double = 0.0 // in radians
+    frequency: Double,   // number of cycles across the image width
+    angle: Double,       // angle of the sinusoid in radians, 0 = horizontal
+    phase: Double = 0.0  // phase offset in radians
 ): BufferedImage {
     val image = BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY)
 
+    val cosA = cos(angle)
+    val sinA = sin(angle)
+
     for (y in 0 until height) {
         for (x in 0 until width) {
-            // Compute normalized value of sine wave: from 0 to 255
-            val radians = 2 * PI * frequency * x / width + phase
+            // Project (x,y) onto direction of the wave
+            val proj = (x * cosA + y * sinA) / width  // normalized position along wave direction
+            val radians = 2 * PI * frequency * proj + phase
             val intensity = ((sin(radians) + 1) * 127.5).toInt().coerceIn(0, 255)
             val rgb = (intensity shl 16) or (intensity shl 8) or intensity
             image.setRGB(x, y, rgb)
