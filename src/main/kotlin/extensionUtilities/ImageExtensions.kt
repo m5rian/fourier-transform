@@ -77,3 +77,38 @@ fun generateSinusoidalGratingImage(
 
     return image
 }
+
+fun generateCombinedSinusoidalGratingImage(
+    width: Int,
+    height: Int,
+    frequencyX: Double,   // frequency of horizontal waves (cycles across width)
+    frequencyY: Double,   // frequency of vertical waves (cycles across height)
+    phaseX: Double = 0.0,
+    phaseY: Double = 0.0
+): BufferedImage {
+    val image = BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY)
+
+    for (y in 0 until height) {
+        for (x in 0 until width) {
+            // Horizontal sine wave (along x-axis)
+            val radiansX = 2 * Math.PI * frequencyX * (x.toDouble() / width) + phaseX
+            val intensityX = Math.sin(radiansX)
+
+            // Vertical sine wave (along y-axis)
+            val radiansY = 2 * Math.PI * frequencyY * (y.toDouble() / height) + phaseY
+            val intensityY = Math.sin(radiansY)
+
+            // Combine waves by adding (values between -1 and 1)
+            val combined = intensityX + intensityY
+
+            // Normalize combined value to 0-255
+            // The sum ranges from -2 to 2, so map [-2,2] -> [0,255]
+            val intensity = ((combined + 2) * (255.0 / 4.0)).toInt().coerceIn(0, 255)
+
+            val rgb = (intensity shl 16) or (intensity shl 8) or intensity
+            image.setRGB(x, y, rgb)
+        }
+    }
+
+    return image
+}

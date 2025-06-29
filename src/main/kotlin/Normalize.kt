@@ -4,9 +4,8 @@ import kotlin.math.log10
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
-fun Array<DoubleArray>.normalizeLinear(limit: Int): Array<IntArray> {
-    val maxValue = this.maxOf { row -> row.max() }
-
+fun Array<DoubleArray>.normalizeLinear(limit: Int, maxValueOptional: Double? = null): Array<IntArray> {
+    val maxValue = maxValueOptional ?: this.maxOf { row -> row.max() }
     val scale = if (maxValue > 0) limit.toDouble() / maxValue else 1.0
 
     val normalized = Array(height) { IntArray(width) { 0 } }

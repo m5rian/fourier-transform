@@ -1,8 +1,6 @@
 package extensionUtilities
 
 import FrequencyDomain
-import org.kotlinmath.Complex
-import org.kotlinmath.I
 
 val Array<IntArray>.rows: Int
     get() = this.size
@@ -25,7 +23,7 @@ val Array<Array<FrequencyDomain>>.columns: Int
     get() = this.first().size
 
 
-fun Array<Array<Complex>>.transposed(): Array<Array<Complex>> {
+inline fun <reified T : Any> Array<Array<T>>.transposed(): Array<Array<T>> {
     val rows = this.size
     val columns = this[0].size
     return Array(columns) { x ->
