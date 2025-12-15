@@ -25,7 +25,7 @@ This example shows how applying a radial low-pass filter in the frequency domain
 
 By removing the strong central frequency components corresponding to scanlines, we can effectively eliminate them from the image while retaining most of the detail.
 
-![Radial Lowpass](examples_visualization/radial_lowpass.png)
+![Scanline Removal](examples_visualization/scanline_removal.png)
 
 ## ⚡ Use it
 
